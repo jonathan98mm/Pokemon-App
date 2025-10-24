@@ -1,4 +1,4 @@
-# Video Games App with Clean Architecture
+# Pokémon App with Clean Architecture
 
 Application for viewing relevant information about the Pokémon saga.
 
