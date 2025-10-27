@@ -3,7 +3,7 @@ input_directory: lib/i18n
 input_file_pattern: .json
 output_directory: lib/generated
 output_file_name: translations.g.dart
-namespaces: true
+namespaces: false
 translate_var: texts
 enum_name: AppLocale
 string_interpolation: double_braces

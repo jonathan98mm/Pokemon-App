@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/home_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/state/home_state.dart';
 import 'package:pokemon_app/app/presentation/modules/home/views/widgets/pokemon_list.dart';
+import 'package:pokemon_app/generated/translations.g.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -28,11 +29,11 @@ class _HomeViewState extends State<HomeView> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
                   height: constraints.maxHeight,
-                  child: const Column(
+                  child: Column(
                     children: [
                       SizedBox(height: 10),
                       Text(
-                        "Pokemones del momento",
+                        texts.home.randomPokemon,
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

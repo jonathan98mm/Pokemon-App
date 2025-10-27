@@ -19,40 +19,50 @@ class PokemonApi {
     final result = await _http.request(
       "pokemon/$id",
       onSuccess: (json) async {
-        final Pokemon pokemon = Pokemon.fromJson(json);
+        Pokemon pokemon = Pokemon.fromJson(json);
 
-        final abilitiesResult = await getAbilities(json["abilities"]);
-        final movesResult = await getMoves(json["moves"]);
-        final statsResult = await getStats(json["stats"]);
-        final typesResult = await getTypes(json["type"]);
+        final abilitiesResult = await getAbilities(
+          List<Map<String, dynamic>>.from(json["abilities"]),
+        );
+        final movesResult = await getMoves(
+          List<Map<String, dynamic>>.from(json["moves"]),
+        );
+        final statsResult = await getStats(
+          List<Map<String, dynamic>>.from(json["stats"]),
+        );
+        final typesResult = await getTypes(
+          List<Map<String, dynamic>>.from(json["types"]),
+        );
 
         abilitiesResult.when(
           left: (failure) => failure,
           right: (abilities) {
-            pokemon.abilities.addAll(abilities);
+            pokemon = pokemon.copyWith(abilities: abilities);
           },
         );
 
         movesResult.when(
           left: (failure) => failure,
           right: (moves) {
-            pokemon.movements.addAll(moves);
+            pokemon = pokemon.copyWith(movements: moves);
           },
         );
 
         statsResult.when(
           left: (failure) => failure,
           right: (stats) {
-            pokemon.stats.addAll(stats);
+            pokemon = pokemon.copyWith(stats: stats);
           },
         );
 
         typesResult.when(
           left: (failure) => failure,
           right: (types) {
-            pokemon.types.addAll(types);
+            pokemon = pokemon.copyWith(types: types);
           },
         );
+
+        //print(pokemon);
 
         return pokemon;
       },
@@ -127,47 +137,6 @@ class PokemonApi {
         onSuccess: (json) {
           Pokemon pokemon = Pokemon.fromJson(json);
 
-          /*final abilitiesResult = await getAbilities(
-            List<Map<String, dynamic>>.from(json["abilities"]),
-          );
-          final movesResult = await getMoves(
-            List<Map<String, dynamic>>.from(json["moves"]),
-          );
-          final statsResult = await getStats(
-            List<Map<String, dynamic>>.from(json["stats"]),
-          );
-          final typesResult = await getTypes(
-            List<Map<String, dynamic>>.from(json["types"]),
-          );
-
-          abilitiesResult.when(
-            left: (failure) => failure,
-            right: (abilities) {
-              pokemon = pokemon.copyWith(abilities: abilities);
-            },
-          );
-
-          movesResult.when(
-            left: (failure) => failure,
-            right: (moves) {
-              pokemon = pokemon.copyWith(movements: moves);
-            },
-          );
-
-          statsResult.when(
-            left: (failure) => failure,
-            right: (stats) {
-              pokemon = pokemon.copyWith(stats: stats);
-            },
-          );
-
-          typesResult.when(
-            left: (failure) => failure,
-            right: (types) {
-              pokemon = pokemon.copyWith(types: types);
-            },
-          );*/
-
           return pokemon;
         },
       );
@@ -182,8 +151,6 @@ class PokemonApi {
       );
     }
 
-    print("Pokemones: $pokemons");
-
     return Either.right(pokemons);
   }
 
@@ -192,26 +159,28 @@ class PokemonApi {
   ) async {
     List<Ability> abilities = [];
 
+    print("Numero de Habilidades Iniciales: ${rawAbilities.length}");
+
     for (Json item in rawAbilities) {
       final String path = item["ability"]["url"];
 
       final result = await _http.request(
         useBaseUrl: false,
         path,
-        onSuccess: (json) {
-          return Ability.fromJson(json);
-        },
+        onSuccess: (json) => Ability.fromJson(json),
       );
 
       result.when(
         left: (failure) {
-          print(failure.exception);
+          print("Fallo en Habilidades: ${failure.exception}");
         },
         right: (ability) {
           abilities.add(ability);
         },
       );
     }
+
+    print("Numero de Habilidades Iniciales: ${abilities.length}");
 
     return Either.right(abilities);
   }
@@ -221,24 +190,26 @@ class PokemonApi {
   ) async {
     List<Move> moves = [];
 
+    print("Número de Movimientos Iniciales: ${rawMoves.length}");
+
     for (Json item in rawMoves) {
       final String path = item["move"]["url"];
 
       final result = await _http.request(
         useBaseUrl: false,
         path,
-        onSuccess: (json) {
-          return Move.fromJson(json);
-        },
+        onSuccess: (json) => Move.fromJson(json),
       );
 
       result.when(
-        left: handleHttpFailure,
+        left: (failure) => print("Fallo en Movimientos: ${failure.exception}"),
         right: (move) async {
           moves.add(move);
         },
       );
     }
+
+    print("Número de Movimientos Finales: ${moves.length} ");
 
     return Either.right(moves);
   }
@@ -260,7 +231,7 @@ class PokemonApi {
       );
 
       result.when(
-        left: handleHttpFailure,
+        left: (failure) => print("Fallo en Estadisticas: ${failure.exception}"),
         right: (stat) async {
           stats.add(stat);
         },
@@ -287,7 +258,7 @@ class PokemonApi {
       );
 
       result.when(
-        left: handleHttpFailure,
+        left: (failure) => print("Fallo en Tipos: ${failure.exception}"),
         right: (type) async {
           types.add(type);
         },

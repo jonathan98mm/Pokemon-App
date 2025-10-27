@@ -66,7 +66,7 @@ class _AppState extends State<App> with WidgetsBindingObserver, RouterMixin {
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        supportedLocales: LocaleSettings.instance.supportedLocales,
+        supportedLocales: AppLocaleUtils.supportedLocales,
         locale: TranslationProvider.of(context).flutterLocale,
       ),
     );

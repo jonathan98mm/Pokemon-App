@@ -29,7 +29,8 @@ mixin RouterMixin on State<App> {
       GoRoute(
         name: Routes.pokemon,
         path: "/pokemon/:id",
-        builder: (_, state) => PokemonView(),
+        builder: (_, state) =>
+            PokemonView(pokemonId: int.parse(state.pathParameters["id"]!)),
       ),
       GoRoute(
         name: Routes.offline,

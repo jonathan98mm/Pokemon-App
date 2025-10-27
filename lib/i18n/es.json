@@ -1,3 +1,5 @@
 {
-  "hello": "hola"
+  "home": {
+    "randomPokemon": "Pokemones del momento"
+  }
 }
