@@ -7,7 +7,6 @@ part 'ability.g.dart';
 @freezed
 abstract class Ability with _$Ability {
   factory Ability({
-    required int id,
     @JsonKey(readValue: readName) required String name,
     @JsonKey(readValue: readDescription) required String description,
   }) = _Ability;
@@ -17,7 +16,7 @@ abstract class Ability with _$Ability {
 }
 
 Object? readDescription(Map map, String _) {
-  final List<Json> textEntries = map["flavor_text_entries"];
+  final List<Json> textEntries = List<Json>.from(map["flavor_text_entries"]);
 
   Json localText = textEntries.firstWhere(
     (json) => json["language"]["name"] == "es",
@@ -27,7 +26,7 @@ Object? readDescription(Map map, String _) {
 }
 
 Object? readName(Map map, String _) {
-  final List<Json> nameEntries = map["names"];
+  final List<Json> nameEntries = List<Json>.from(map["names"]);
 
   Json localText = nameEntries.firstWhere(
     (json) => json["language"]["name"] == "es",

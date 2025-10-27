@@ -17,9 +17,10 @@ class SplashView extends StatelessWidget {
         color: darkMode ? AppColors.dark : Colors.white,
         child: Center(
           child: SizedBox(
-            width: 80,
-            height: 80,
+            width: 110,
+            height: 110,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(
                   width: 80,

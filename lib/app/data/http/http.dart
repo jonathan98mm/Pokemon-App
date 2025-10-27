@@ -111,7 +111,7 @@ class Http {
     } finally {
       logs = {...logs, "endTime": DateTime.now().toString()};
 
-      _printLogs(logs, stack);
+      //_printLogs(logs, stack);
     }
   }
 }

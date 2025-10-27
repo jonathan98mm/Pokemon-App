@@ -39,6 +39,7 @@ class PokemonList extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (_, index) {
                       final pokemon = list[index];
+
                       return PokemonTile(
                         pokemon: pokemon,
                         width: width,

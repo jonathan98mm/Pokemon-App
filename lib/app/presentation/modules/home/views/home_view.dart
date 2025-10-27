@@ -31,6 +31,14 @@ class _HomeViewState extends State<HomeView> {
                   child: const Column(
                     children: [
                       SizedBox(height: 10),
+                      Text(
+                        "Pokemones del momento",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       PokemonList(),
                       SizedBox(height: 20),
                     ],

@@ -14,7 +14,7 @@ abstract class PokemonType with _$PokemonType {
 }
 
 Object? readName(Map map, String _) {
-  final List<Json> nameEntries = map["names"];
+  final List<Json> nameEntries = List<Json>.from(map["names"]);
 
   Json localText = nameEntries.firstWhere(
     (json) => json["language"]["name"] == "es",

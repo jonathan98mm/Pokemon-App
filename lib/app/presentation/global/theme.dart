@@ -5,7 +5,7 @@ import 'package:pokemon_app/app/presentation/global/colors.dart';
 ThemeData getTheme(bool darkMode) {
   if (darkMode) {
     return ThemeData.dark().copyWith(
-      textTheme: GoogleFonts.nunitoSansTextTheme(
+      textTheme: GoogleFonts.playTextTheme(
         ThemeData.dark().textTheme.copyWith(
           titleSmall: const TextStyle(fontWeight: FontWeight.bold),
           titleMedium: const TextStyle(
@@ -30,7 +30,7 @@ ThemeData getTheme(bool darkMode) {
     );
   }
   return ThemeData.light().copyWith(
-    textTheme: GoogleFonts.nunitoSansTextTheme(
+    textTheme: GoogleFonts.playTextTheme(
       ThemeData.light().textTheme.copyWith(
         titleSmall: const TextStyle(
           color: AppColors.dark,

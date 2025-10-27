@@ -21,7 +21,7 @@ class PokemonRepositoryImpl implements PokemonRepository {
 
   @override
   Future<Either<HttpRequestFailure, List<Pokemon>>> getRandomPokemons({
-    int count = 3,
+    int count = 1,
   }) async {
     return _pokemonApi.getRandomPokemons(count);
   }

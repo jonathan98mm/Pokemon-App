@@ -16,14 +16,14 @@ abstract class Pokemon with _$Pokemon {
     required int id,
     required String name,
     @JsonKey(name: "base_experience") required int experience,
-    @Default([]) List<Ability> abilities,
+    @JsonKey(includeFromJson: false) @Default([]) List<Ability> abilities,
     @JsonKey(readValue: readSoundPath) required String soundPath,
     required int height,
-    @Default([]) List<Move> movements,
+    @JsonKey(includeFromJson: false) @Default([]) List<Move> movements,
     @JsonKey(readValue: readSpritePath) required String spritePath,
     @JsonKey(readValue: readArtworkPath) required String artworkPath,
-    @Default([]) List<Stat> stats,
-    @Default([]) List<PokemonType> types,
+    @JsonKey(includeFromJson: false) @Default([]) List<Stat> stats,
+    @JsonKey(includeFromJson: false) @Default([]) List<PokemonType> types,
     required int weight,
   }) = _Pokemon;
 

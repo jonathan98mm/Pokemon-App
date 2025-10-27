@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
-abstract class StateNotifier<State> extends ChangeNotifier {
+abstract class StateNotifier<S> extends ChangeNotifier {
   StateNotifier(this._state) : _oldState = _state;
 
-  State _state, _oldState;
+  S _state, _oldState;
   bool _mounted = true;
 
-  State get state => _state;
+  S get state => _state;
   bool get mounted => _mounted;
-  State get oldState => _oldState;
+  S get oldState => _oldState;
 
-  set state(State newState) {
+  set state(S newState) {
     _update(newState);
   }
 
-  void onlyUpdate(State newState) {
+  void onlyUpdate(S newState) {
     _update(newState, notify: false);
   }
 
-  void _update(State newState, {bool notify = true}) {
-    if (_state != _oldState) {
+  void _update(S newState, {bool notify = true}) {
+    if (newState != _oldState) {
       _oldState = _state;
       _state = newState;
 

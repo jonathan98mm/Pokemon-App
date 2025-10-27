@@ -18,7 +18,7 @@ abstract class Move with _$Move {
 }
 
 Object? readName(Map map, String _) {
-  final List<Json> nameEntries = map["names"];
+  final List<Json> nameEntries = List<Json>.from(map["names"]);
 
   Json localText = nameEntries.firstWhere(
     (json) => json["language"]["name"] == "es",
@@ -28,7 +28,7 @@ Object? readName(Map map, String _) {
 }
 
 Object? readDescription(Map map, String _) {
-  final List<Json> textEntries = map["flavor_text_entries"];
+  final List<Json> textEntries = List<Json>.from(map["flavor_text_entries"]);
 
   Json localText = textEntries.firstWhere(
     (json) => json["language"]["name"] == "es",

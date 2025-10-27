@@ -86,7 +86,7 @@ class Root extends StatelessWidget {
           create: (_) => PokemonRepositoryImpl(PokemonApi(http)),
         ),
         ChangeNotifierProvider<ThemeController>(
-          create: (_) {
+          create: (context) {
             final PreferencesRepository preferencesRepository = context.read();
 
             return ThemeController(

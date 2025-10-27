@@ -6,6 +6,6 @@ abstract class PokemonRepository {
   Future<Either<HttpRequestFailure, Pokemon>> getPokemonById(int id);
   Future<Either<HttpRequestFailure, Pokemon>> getPokemonByName(String name);
   Future<Either<HttpRequestFailure, List<Pokemon>>> getRandomPokemons({
-    int count = 3,
+    int count,
   });
 }
