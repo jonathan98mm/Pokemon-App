@@ -1,5 +1,9 @@
 {
   "home": {
     "randomPokemon": "Pokemons of the moment"
+  },
+  "loader": "Loading...",
+  "pokemon": {
+    "stats": "Stats"
   }
 }

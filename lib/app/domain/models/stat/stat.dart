@@ -7,7 +7,10 @@ part 'stat.g.dart';
 
 @freezed
 abstract class Stat with _$Stat {
-  factory Stat({@JsonKey(readValue: readName) required String name}) = _Stat;
+  factory Stat({
+    required int id,
+    @JsonKey(readValue: readName) required String name,
+  }) = _Stat;
 
   factory Stat.fromJson(Map<String, dynamic> json) => _$StatFromJson(json);
 }

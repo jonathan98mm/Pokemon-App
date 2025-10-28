@@ -13,4 +13,10 @@ extension StringExtension on String {
 
     return "${substring(0, 1).toUpperCase()}${substring(1)}";
   }
+
+  int getIdFromUrl() {
+    List<String> parts = split("/");
+
+    return int.parse(parts[parts.length - 2]);
+  }
 }

@@ -8,6 +8,7 @@ part 'move.g.dart';
 @freezed
 abstract class Move with _$Move {
   factory Move({
+    required int id,
     @JsonKey(readValue: readName) required String name,
     @Default(0) int accuracy,
     @Default(0) int power,

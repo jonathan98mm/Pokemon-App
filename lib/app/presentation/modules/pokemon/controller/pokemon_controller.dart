@@ -18,7 +18,5 @@ class PokemonController extends StateNotifier<PokemonState> {
       left: (_) => PokemonState.failed(),
       right: (pokemon) => PokemonState.loaded(pokemon),
     );
-
-    print(state);
   }
 }

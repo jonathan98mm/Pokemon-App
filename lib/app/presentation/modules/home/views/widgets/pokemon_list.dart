@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_app/app/presentation/global/widgets/pokemon_loader.dart';
 import 'package:pokemon_app/app/presentation/global/widgets/request_failed.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/home_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/state/home_state.dart';
@@ -15,6 +16,7 @@ class PokemonList extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(height: 10),
         AspectRatio(
@@ -25,7 +27,7 @@ class PokemonList extends StatelessWidget {
 
               return Center(
                 child: state.when(
-                  loading: () => CircularProgressIndicator(),
+                  loading: () => PokemonLoader(size: 80),
                   failed: () => RequestFailed(
                     onRetry: () {
                       controller.loadRandomPokemons(

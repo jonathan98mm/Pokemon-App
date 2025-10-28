@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_app/app/presentation/global/widgets/pokemon_loader.dart';
 import 'package:pokemon_app/app/presentation/global/widgets/request_failed.dart';
 import 'package:pokemon_app/app/presentation/modules/pokemon/controller/pokemon_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/pokemon/controller/state/pokemon_state.dart';
@@ -22,10 +23,27 @@ class PokemonView extends StatelessWidget {
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(title: Text(pokemonId.toString())),
-          body: controller.state.map(
-            loading: (_) => const CircularProgressIndicator(),
-            failed: (_) => RequestFailed(onRetry: () => controller.init()),
-            loaded: (state) => PokemonContent(state: state),
+          body: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                  height: constraints.maxHeight,
+                  width: constraints.maxWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      controller.state.when(
+                        loading: () => PokemonLoader(),
+                        failed: () =>
+                            RequestFailed(onRetry: () => controller.init()),
+                        loaded: (pokemon) => PokemonContent(pokemon: pokemon),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         );
       },

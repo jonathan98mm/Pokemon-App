@@ -15,7 +15,7 @@ class RequestFailed extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(child: ExtendedImage.asset("404.png")),
+          Expanded(child: ExtendedImage.asset("images/404.png")),
           Text(text ?? "Ocurrió un error"),
           MaterialButton(
             onPressed: onRetry,

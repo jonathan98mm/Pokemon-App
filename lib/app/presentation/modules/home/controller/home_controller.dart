@@ -9,7 +9,7 @@ class HomeController extends StateNotifier<HomeState> {
   final PokemonRepository pokemonRepository;
 
   Future<void> init() async {
-    await loadRandomPokemons();
+    await loadRandomPokemons(pokemons: PokemonsState.loading());
   }
 
   Future<void> loadRandomPokemons({PokemonsState? pokemons}) async {

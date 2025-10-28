@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:pokemon_app/app/app.dart';
@@ -11,6 +12,7 @@ import 'package:pokemon_app/app/data/repositories_implementation/connectivity_re
 import 'package:pokemon_app/app/data/repositories_implementation/language_repository_impl.dart';
 import 'package:pokemon_app/app/data/repositories_implementation/pokemon_repository_impl.dart';
 import 'package:pokemon_app/app/data/repositories_implementation/preferences_repository_impl.dart';
+import 'package:pokemon_app/app/data/services/local/api_cache.dart';
 import 'package:pokemon_app/app/data/services/local/internet_checker.dart';
 import 'package:pokemon_app/app/data/services/local/language_service.dart';
 import 'package:pokemon_app/app/data/services/remote/pokemon_api.dart';
@@ -27,6 +29,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
   Intl.defaultLocale = LocaleSettings.instance.currentLocale.languageTag;
+  await Hive.initFlutter();
+  await Hive.openBox<String>("apiCache");
 
   await dotenv.load(fileName: ".env");
 
@@ -51,6 +55,7 @@ void main() async {
       preferences: preferences,
       darkMode: darkMode,
       http: http,
+      cache: ApiCache(),
     ),
   );
 }
@@ -62,12 +67,14 @@ class Root extends StatelessWidget {
     required this.preferences,
     required this.darkMode,
     required this.http,
+    required this.cache,
   });
 
   final ConnectivityRepository connectivityRepository;
   final SharedPreferences preferences;
   final bool darkMode;
   final Http http;
+  final ApiCache cache;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +90,7 @@ class Root extends StatelessWidget {
           create: (_) => PreferencesRepositroyImpl(preferences, darkMode),
         ),
         Provider<PokemonRepository>(
-          create: (_) => PokemonRepositoryImpl(PokemonApi(http)),
+          create: (_) => PokemonRepositoryImpl(PokemonApi(http, cache)),
         ),
         ChangeNotifierProvider<ThemeController>(
           create: (context) {

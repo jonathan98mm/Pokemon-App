@@ -8,6 +8,7 @@ part 'ability.g.dart';
 @freezed
 abstract class Ability with _$Ability {
   factory Ability({
+    required id,
     @JsonKey(readValue: readName) required String name,
     @JsonKey(readValue: readDescription) required String description,
   }) = _Ability;

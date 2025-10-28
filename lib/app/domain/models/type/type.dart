@@ -7,8 +7,10 @@ part 'type.g.dart';
 
 @freezed
 abstract class PokemonType with _$PokemonType {
-  factory PokemonType({@JsonKey(readValue: readName) required String name}) =
-      _PokemonType;
+  factory PokemonType({
+    required int id,
+    @JsonKey(readValue: readName) required String name,
+  }) = _PokemonType;
 
   factory PokemonType.fromJson(Map<String, dynamic> json) =>
       _$PokemonTypeFromJson(json);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/presentation/global/colors.dart';
 import 'package:pokemon_app/app/presentation/global/controllers/theme_controller.dart';
+import 'package:pokemon_app/app/presentation/global/widgets/pokemon_loader.dart';
 import 'package:provider/provider.dart';
 
 class SplashView extends StatelessWidget {
@@ -19,23 +20,7 @@ class SplashView extends StatelessWidget {
           child: SizedBox(
             width: 110,
             height: 110,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: CircularProgressIndicator(),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "LOADING...",
-                  style: TextStyle(
-                    color: darkMode ? Colors.white : AppColors.dark,
-                  ),
-                ),
-              ],
-            ),
+            child: PokemonLoader(size: 70),
           ),
         ),
       ),
