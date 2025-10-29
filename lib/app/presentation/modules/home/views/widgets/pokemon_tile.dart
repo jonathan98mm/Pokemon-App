@@ -90,7 +90,7 @@ class PokemonTile extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                     child: Text(
-                      "No. ${pokemon.id.toString()}",
+                      "# ${pokemon.id.toString()}",
                       style: TextStyle(fontSize: 10, color: Colors.white),
                     ),
                   ),

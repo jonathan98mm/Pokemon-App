@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/home_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/state/home_state.dart';
@@ -20,7 +21,20 @@ class _HomeViewState extends State<HomeView> {
           HomeController(HomeState(), pokemonRepository: context.read())
             ..init(),
       child: Scaffold(
-        appBar: AppBar(title: Text("Pokémon App")),
+        appBar: AppBar(
+          titleSpacing: 5,
+          title: Row(
+            children: [
+              ExtendedImage.asset(
+                "assets/images/pokeball.png",
+                width: 50,
+                height: 50,
+              ),
+              const SizedBox(width: 5),
+              Text("Pokémon App"),
+            ],
+          ),
+        ),
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) => RefreshIndicator(

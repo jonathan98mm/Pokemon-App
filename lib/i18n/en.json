@@ -4,6 +4,10 @@
   },
   "loader": "Loading...",
   "pokemon": {
-    "stats": "Stats"
+    "stats": "Stats",
+    "height": "Height: ",
+    "weight": "Weight: ",
+    "abilities": "Abilities",
+    "movements": "Movements"
   }
 }

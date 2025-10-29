@@ -53,7 +53,7 @@ class PokemonContent extends StatelessWidget {
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: "Altura: ",
+                                text: texts.pokemon.height,
                                 children: [
                                   TextSpan(
                                     text: "${pokemon.height / 10} m",
@@ -71,7 +71,7 @@ class PokemonContent extends StatelessWidget {
                             ),
                             RichText(
                               text: TextSpan(
-                                text: "Peso: ",
+                                text: texts.pokemon.weight,
                                 children: [
                                   TextSpan(
                                     text: "${pokemon.weight / 10} Kg",
@@ -141,7 +141,7 @@ class PokemonContent extends StatelessWidget {
         SliverToBoxAdapter(child: const SizedBox(height: 10)),
         SliverToBoxAdapter(
           child: Text(
-            "Habilidades",
+            texts.pokemon.abilities,
             style: TextStyle(fontSize: 25, color: Colors.white),
             textAlign: TextAlign.center,
           ),
@@ -161,7 +161,7 @@ class PokemonContent extends StatelessWidget {
         SliverToBoxAdapter(child: const SizedBox(height: 10)),
         SliverToBoxAdapter(
           child: Text(
-            "Movimientos",
+            texts.pokemon.movements,
             style: TextStyle(fontSize: 25, color: Colors.white),
             textAlign: TextAlign.center,
           ),
