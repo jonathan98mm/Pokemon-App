@@ -31,10 +31,15 @@ class PokemonView extends StatelessWidget {
                   height: constraints.maxHeight,
                   width: constraints.maxWidth,
                   child: Column(
+                    mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       controller.state.when(
-                        loading: () => PokemonLoader(),
+                        loading: () => Container(
+                          height: constraints.maxHeight,
+                          alignment: Alignment.center,
+                          child: PokemonLoader(),
+                        ),
                         failed: () =>
                             RequestFailed(onRetry: () => controller.init()),
                         loaded: (pokemon) => PokemonContent(pokemon: pokemon),

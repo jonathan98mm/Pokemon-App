@@ -38,6 +38,7 @@ class _PokemonLoaderState extends State<PokemonLoader>
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RotationTransition(
           turns: _controller,

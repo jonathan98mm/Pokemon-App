@@ -104,7 +104,8 @@ class PokemonTile extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     child: Text(
                       pokemon.name.capitalize(),
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 13),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

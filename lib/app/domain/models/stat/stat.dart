@@ -10,6 +10,7 @@ abstract class Stat with _$Stat {
   factory Stat({
     required int id,
     @JsonKey(readValue: readName) required String name,
+    @Default(0) int value,
   }) = _Stat;
 
   factory Stat.fromJson(Map<String, dynamic> json) => _$StatFromJson(json);

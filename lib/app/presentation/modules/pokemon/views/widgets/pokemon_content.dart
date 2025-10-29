@@ -4,6 +4,8 @@ import 'package:pokemon_app/app/domain/models/pokemon/pokemon.dart';
 import 'package:pokemon_app/app/presentation/global/colors.dart';
 import 'package:pokemon_app/app/presentation/global/extensions/string_extension.dart';
 import 'package:pokemon_app/app/presentation/global/widgets/flip_card.dart';
+import 'package:pokemon_app/app/presentation/modules/pokemon/views/widgets/stat_bar.dart';
+import 'package:pokemon_app/app/presentation/modules/pokemon/views/widgets/type_chip.dart';
 import 'package:pokemon_app/generated/translations.g.dart';
 
 class PokemonContent extends StatelessWidget {
@@ -24,7 +26,7 @@ class PokemonContent extends StatelessWidget {
                 color: AppColors.secondary,
                 child: Container(
                   width: double.maxFinite,
-                  height: 400,
+                  height: 450,
                   alignment: Alignment.topCenter,
                   child: Column(
                     children: [
@@ -33,7 +35,14 @@ class PokemonContent extends StatelessWidget {
                         pokemon.name.capitalize(),
                         style: TextStyle(fontSize: 35, color: Colors.white),
                       ),
-                      ExtendedImage.network(pokemon.artworkPath),
+                      ExtendedImage.network(pokemon.artworkPath, height: 300),
+                      Wrap(
+                        spacing: 10,
+                        children: List.generate(
+                          pokemon.types.length,
+                          (index) => TypeChip(type: pokemon.types[index]),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -42,7 +51,7 @@ class PokemonContent extends StatelessWidget {
                 color: AppColors.primary,
                 child: Container(
                   width: double.maxFinite,
-                  height: 400,
+                  height: 450,
                   alignment: Alignment.center,
                   child: Column(
                     children: [
@@ -55,7 +64,26 @@ class PokemonContent extends StatelessWidget {
                       ExtendedImage.network(pokemon.spritePath),
                       SizedBox(height: 10),
                       Text(texts.pokemon.stats, style: TextStyle(fontSize: 20)),
-                      Text(pokemon.stats.first.name),
+                      SizedBox(height: 10),
+                      LayoutBuilder(
+                        builder: (_, constraints) => Container(
+                          width: constraints.maxWidth * 0.9,
+                          height: 220,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: List.generate(
+                              pokemon.stats.length,
+                              (index) => StatBar(stat: pokemon.stats[index]),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

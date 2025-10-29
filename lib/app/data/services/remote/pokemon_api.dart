@@ -330,7 +330,8 @@ class PokemonApi {
       final String? statJson = _cache.getStat(id);
 
       if (statJson != null) {
-        stats.add(Stat.fromJson(jsonDecode(statJson)));
+        Stat stat = Stat.fromJson(jsonDecode(statJson));
+        stats.add(stat.copyWith(value: item["base_stat"]));
 
         continue;
       }
@@ -339,9 +340,11 @@ class PokemonApi {
         useBaseUrl: false,
         path,
         onSuccess: (json) {
+          Stat stat = Stat.fromJson(json);
+
           _cache.saveStat(id, jsonEncode(json));
 
-          return Stat.fromJson(json);
+          return stat.copyWith(value: item["base_stat"]);
         },
       );
 
