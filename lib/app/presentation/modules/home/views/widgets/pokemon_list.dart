@@ -23,7 +23,7 @@ class PokemonList extends StatelessWidget {
           aspectRatio: 16 / 8,
           child: LayoutBuilder(
             builder: (_, constraints) {
-              final double width = constraints.maxHeight * 0.65;
+              final double width = constraints.maxHeight * 0.80;
 
               return Center(
                 child: state.when(

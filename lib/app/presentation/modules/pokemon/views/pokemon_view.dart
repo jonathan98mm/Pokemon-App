@@ -26,26 +26,21 @@ class PokemonView extends StatelessWidget {
           body: SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) => SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: SizedBox(
-                  height: constraints.maxHeight,
-                  width: constraints.maxWidth,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      controller.state.when(
-                        loading: () => Container(
-                          height: constraints.maxHeight,
-                          alignment: Alignment.center,
-                          child: PokemonLoader(),
-                        ),
-                        failed: () =>
-                            RequestFailed(onRetry: () => controller.init()),
-                        loaded: (pokemon) => PokemonContent(pokemon: pokemon),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    controller.state.when(
+                      loading: () => Container(
+                        height: constraints.maxHeight,
+                        alignment: Alignment.center,
+                        child: PokemonLoader(),
                       ),
-                    ],
-                  ),
+                      failed: () =>
+                          RequestFailed(onRetry: () => controller.init()),
+                      loaded: (pokemon) => PokemonContent(pokemon: pokemon),
+                    ),
+                  ],
                 ),
               ),
             ),
