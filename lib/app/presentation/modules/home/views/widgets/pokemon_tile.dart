@@ -68,7 +68,7 @@ class PokemonTile extends StatelessWidget {
                               style: TextStyle(fontSize: 10),
                             ),
                             SizedBox(width: 2.5),
-                            Icon(Icons.arrow_upward, size: 10),
+                            Icon(Icons.keyboard_double_arrow_up, size: 10),
                           ],
                         ),
                       ),

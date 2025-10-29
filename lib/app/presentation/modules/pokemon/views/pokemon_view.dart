@@ -24,25 +24,12 @@ class PokemonView extends StatelessWidget {
           extendBodyBehindAppBar: true,
           appBar: AppBar(title: Text(pokemonId.toString())),
           body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) => SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    controller.state.when(
-                      loading: () => Container(
-                        height: constraints.maxHeight,
-                        alignment: Alignment.center,
-                        child: PokemonLoader(),
-                      ),
-                      failed: () =>
-                          RequestFailed(onRetry: () => controller.init()),
-                      loaded: (pokemon) => PokemonContent(pokemon: pokemon),
-                    ),
-                  ],
-                ),
+            child: controller.state.when(
+              loading: () => Center(child: PokemonLoader(size: 80)),
+              failed: () => Center(
+                child: RequestFailed(onRetry: () => controller.init()),
               ),
+              loaded: (pokemon) => PokemonContent(pokemon: pokemon),
             ),
           ),
         );
