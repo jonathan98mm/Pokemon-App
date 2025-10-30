@@ -139,7 +139,7 @@ class PokemonApi {
     final result = await _http.request(
       "pokemon/${_getFilteredName(name)}",
       onSuccess: (json) async {
-        await _cache.savePokemon(int.parse(json["id"]), jsonEncode(json));
+        await _cache.savePokemon(json["id"], jsonEncode(json));
 
         Pokemon pokemon = Pokemon.fromJson(json);
 
@@ -221,9 +221,7 @@ class PokemonApi {
       );
 
       result.when(
-        left: (failure) {
-          print(failure.data);
-        },
+        left: handleHttpFailure,
         right: (pokemon) {
           pokemons.add(pokemon);
         },

@@ -22,7 +22,7 @@ class PokemonTile extends StatelessWidget {
     return InkWell(
       onTap: () => context.pushNamed(
         Routes.pokemon,
-        pathParameters: {"id": pokemon.id.toString()},
+        pathParameters: {"param": pokemon.id.toString()},
       ),
       child: ClipRRect(
         borderRadius: BorderRadiusGeometry.circular(10),

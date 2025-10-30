@@ -28,6 +28,9 @@ dependencies:
   extended_image: ^10.0.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  flutter_soloud: ^3.4.1
+  skeletonizer: ^2.1.0+1
+  anim_search_bar: ^2.0.3
 
 dev_dependencies:
   flutter_test:

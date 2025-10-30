@@ -13,6 +13,7 @@ import 'package:pokemon_app/app/data/repositories_implementation/language_reposi
 import 'package:pokemon_app/app/data/repositories_implementation/pokemon_repository_impl.dart';
 import 'package:pokemon_app/app/data/repositories_implementation/preferences_repository_impl.dart';
 import 'package:pokemon_app/app/data/services/local/api_cache.dart';
+import 'package:pokemon_app/app/data/services/local/audio_player.dart';
 import 'package:pokemon_app/app/data/services/local/internet_checker.dart';
 import 'package:pokemon_app/app/data/services/local/language_service.dart';
 import 'package:pokemon_app/app/data/services/remote/pokemon_api.dart';
@@ -39,6 +40,8 @@ void main() async {
     baseUrl: dotenv.get("BASE_URL", fallback: "NO_BASE_URL"),
   );
 
+  final AudioPlayer player = AudioPlayer();
+
   final SharedPreferences preferences = await SharedPreferences.getInstance();
 
   final bool darkMode =
@@ -48,6 +51,7 @@ void main() async {
       ConnectivityRepositoryImpl(Connectivity(), InternetChecker());
 
   await connectivityRepository.initialize();
+  await player.init();
 
   runApp(
     Root(
@@ -56,6 +60,7 @@ void main() async {
       darkMode: darkMode,
       http: http,
       cache: ApiCache(),
+      player: player,
     ),
   );
 }
@@ -68,6 +73,7 @@ class Root extends StatelessWidget {
     required this.darkMode,
     required this.http,
     required this.cache,
+    required this.player,
   });
 
   final ConnectivityRepository connectivityRepository;
@@ -75,11 +81,13 @@ class Root extends StatelessWidget {
   final bool darkMode;
   final Http http;
   final ApiCache cache;
+  final AudioPlayer player;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<AudioPlayer>(create: (_) => player),
         Provider<ConnectivityRepository>(create: (_) => connectivityRepository),
         Provider<LanguageRepository>(
           create: (context) => LanguageRepositoryImpl(

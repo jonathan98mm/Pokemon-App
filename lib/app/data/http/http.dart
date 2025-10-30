@@ -26,6 +26,7 @@ class Http {
     String languageCode = "es",
   }) async {
     Map<String, dynamic> logs = {};
+    // ignore: unused_local_variable
     StackTrace? stack;
 
     try {
@@ -124,6 +125,7 @@ dynamic _parseResponseBody(String responseBody) {
   }
 }
 
+// ignore: unused_element
 void _printLogs(Map<String, dynamic> logs, StackTrace? stackTrace) {
   if (kDebugMode) {
     log('''

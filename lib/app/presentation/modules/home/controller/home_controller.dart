@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:pokemon_app/app/domain/either/either.dart';
 import 'package:pokemon_app/app/domain/repositories/pokemon_repository.dart';
 import 'package:pokemon_app/app/presentation/global/state_notifier.dart';
@@ -7,6 +8,7 @@ class HomeController extends StateNotifier<HomeState> {
   HomeController(super.state, {required this.pokemonRepository});
 
   final PokemonRepository pokemonRepository;
+  final TextEditingController textController = TextEditingController();
 
   Future<void> init() async {
     await loadRandomPokemons(pokemons: PokemonsState.loading());

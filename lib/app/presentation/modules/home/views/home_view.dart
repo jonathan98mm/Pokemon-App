@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/home_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/state/home_state.dart';
+import 'package:pokemon_app/app/presentation/modules/home/views/widgets/pokemon_search_bar.dart';
 import 'package:pokemon_app/app/presentation/modules/home/views/widgets/pokemon_list.dart';
 import 'package:pokemon_app/generated/translations.g.dart';
 import 'package:provider/provider.dart';
@@ -27,13 +28,21 @@ class _HomeViewState extends State<HomeView> {
             children: [
               ExtendedImage.asset(
                 "assets/images/pokeball.png",
-                width: 50,
-                height: 50,
+                width: 30,
+                height: 30,
               ),
               const SizedBox(width: 5),
-              Text("Pokémon App"),
+              Text("Pokémon App", style: TextStyle(fontSize: 15)),
             ],
           ),
+          actions: [
+            LayoutBuilder(
+              builder: (context, constraints) => PokemonSearchBar(
+                controller: context.read<HomeController>().textController,
+              ),
+            ),
+          ],
+          actionsPadding: EdgeInsets.only(right: 10),
         ),
         body: SafeArea(
           child: LayoutBuilder(
