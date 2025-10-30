@@ -8,6 +8,7 @@ import 'package:pokemon_app/app/presentation/modules/pokemon/controller/pokemon_
 import 'package:pokemon_app/app/presentation/modules/pokemon/controller/state/pokemon_state.dart';
 import 'package:pokemon_app/app/presentation/modules/pokemon/views/widgets/pokemon_content.dart';
 import 'package:pokemon_app/app/presentation/routes/routes.dart';
+import 'package:pokemon_app/generated/translations.g.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -46,8 +47,8 @@ class PokemonView extends StatelessWidget {
               ),
               child: Text(
                 controller.state.when(
-                  loading: () => "Cargando...",
-                  failed: (_) => "Ocurrió un error",
+                  loading: () => texts.pokemon.loading,
+                  failed: (_) => texts.errors.error,
                   loaded: (pokemon) =>
                       "#${pokemon.id} - ${pokemon.name.capitalize()}",
                 ),
@@ -61,12 +62,20 @@ class PokemonView extends StatelessWidget {
                   failed: (_) => false,
                   loaded: (_) => false,
                 ),
-                child: IconButton(
-                  onPressed: () => controller.playPokemonCry(),
-                  icon: Icon(Icons.hearing),
+                child: controller.state.when(
+                  loading: () => Icon(Icons.hearing_disabled),
+                  failed: (_) => IconButton(
+                    onPressed: null,
+                    icon: Icon(Icons.hearing_disabled),
+                  ),
+                  loaded: (_) => IconButton(
+                    onPressed: () => controller.playPokemonCry(),
+                    icon: Icon(Icons.hearing),
+                  ),
                 ),
               ),
             ],
+            actionsPadding: EdgeInsets.symmetric(horizontal: 15),
           ),
           body: SafeArea(
             child: controller.state.when(
@@ -74,7 +83,7 @@ class PokemonView extends StatelessWidget {
               failed: (failure) => Center(
                 child: RequestFailed(
                   text: failure is HttpNotFound
-                      ? "¡El Pokémon no existe!"
+                      ? texts.errors.pokemonNotFound
                       : null,
                   onRetry: () {
                     if (failure is HttpNotFound) {

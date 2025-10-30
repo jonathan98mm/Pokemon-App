@@ -8,6 +8,12 @@
     "height": "Height: ",
     "weight": "Weight: ",
     "abilities": "Abilities",
-    "movements": "Movements"
+    "movements": "Movements",
+    "loading": "Loading..."
+  },
+  "errors": {
+    "error": "An error ocurred",
+    "pokemonNotFound": "The Pokémon doesn't exists!",
+    "buttonMessage": "Try again?"
   }
 }
