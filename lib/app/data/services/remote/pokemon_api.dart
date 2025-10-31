@@ -8,6 +8,7 @@ import 'package:pokemon_app/app/domain/either/either.dart';
 import 'package:pokemon_app/app/domain/failures/http_request_failure/http_request_failure.dart';
 import 'package:pokemon_app/app/domain/models/ability/ability.dart';
 import 'package:pokemon_app/app/domain/models/move/move.dart';
+import 'package:pokemon_app/app/domain/models/paginated_response/paginated_response.dart';
 import 'package:pokemon_app/app/domain/models/pokemon/pokemon.dart';
 import 'package:pokemon_app/app/domain/models/stat/stat.dart';
 import 'package:pokemon_app/app/domain/models/type/type.dart';
@@ -229,6 +230,82 @@ class PokemonApi {
     }
 
     return Either.right(pokemons);
+  }
+
+  Future<Either<HttpRequestFailure, Pokemon>> getUndetailedPokemon(
+    String url,
+  ) async {
+    final int id = url.getIdFromUrl();
+    final String? pokemonJson = _cache.getPokemon(id);
+    final Pokemon pokemon;
+
+    if (pokemonJson != null) {
+      pokemon = Pokemon.fromJson(jsonDecode(pokemonJson));
+
+      return Future.value(Either.right(pokemon));
+    } else {
+      final result = await _http.request(
+        url,
+        useBaseUrl: false,
+        onSuccess: (json) {
+          _cache.savePokemon(id, jsonEncode(json));
+
+          Pokemon pokemon = Pokemon.fromJson(json);
+
+          return pokemon;
+        },
+      );
+
+      return result.when(
+        left: handleHttpFailure,
+        right: (pokemon) => Either.right(pokemon),
+      );
+    }
+  }
+
+  Future<Either<HttpRequestFailure, PaginatedResponse>> getPaginatedPokemons(
+    int offset,
+    int limit,
+  ) async {
+    bool hasNextPage = false;
+    List<Json> results = [];
+    List<Pokemon> pokemonDetails = [];
+
+    final result = await _http.request(
+      "pokemon",
+      queryParameters: {"offset": offset.toString(), "limit": limit.toString()},
+      onSuccess: (json) {
+        hasNextPage = json["next"] != null;
+
+        return List<Json>.from(json["results"]);
+      },
+    );
+
+    result.when(
+      left: handleHttpFailure,
+      right: (list) {
+        results = list;
+      },
+    );
+
+    final List<Future<Either<HttpRequestFailure, Pokemon>>> detailsFutures =
+        results.map((json) => getUndetailedPokemon(json["url"])).toList();
+
+    final List<Either<HttpRequestFailure, Pokemon>> responseList =
+        await Future.wait(detailsFutures);
+
+    for (Either<HttpRequestFailure, Pokemon> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
+        right: (pokemon) {
+          pokemonDetails.add(pokemon);
+        },
+      );
+    }
+
+    return Either.right(
+      PaginatedResponse(hasNextPage: hasNextPage, pokemons: pokemonDetails),
+    );
   }
 
   Future<Either<HttpRequestFailure, List<Ability>>> getAbilities(

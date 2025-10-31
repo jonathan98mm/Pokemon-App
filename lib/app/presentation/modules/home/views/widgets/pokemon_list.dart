@@ -12,7 +12,8 @@ class PokemonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = context.watch();
-    final PokemonsState state = controller.state.pokemons;
+    final PokemonUiState randomState = controller.state.randomPokemons;
+    final PokemonUiState paginatedState = controller.state.paginatedPokemons;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,21 +27,19 @@ class PokemonList extends StatelessWidget {
               final double width = constraints.maxHeight * 0.80;
 
               return Center(
-                child: state.when(
+                child: randomState.when(
                   loading: () => PokemonLoader(size: 80),
                   failed: () => RequestFailed(
                     onRetry: () {
-                      controller.loadRandomPokemons(
-                        pokemons: PokemonsState.loading(),
-                      );
+                      controller.loadRandomPokemons();
                     },
                   ),
-                  loaded: (list) => ListView.separated(
+                  loaded: (random) => ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     separatorBuilder: (_, __) => const SizedBox(width: 10),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (_, index) {
-                      final pokemon = list[index];
+                      final pokemon = random[index];
 
                       return PokemonTile(
                         pokemon: pokemon,
@@ -48,7 +47,7 @@ class PokemonList extends StatelessWidget {
                         showData: true,
                       );
                     },
-                    itemCount: list.length,
+                    itemCount: random.length,
                   ),
                 ),
               );

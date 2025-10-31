@@ -1,6 +1,7 @@
 import 'package:pokemon_app/app/data/services/remote/pokemon_api.dart';
 import 'package:pokemon_app/app/domain/either/either.dart';
 import 'package:pokemon_app/app/domain/failures/http_request_failure/http_request_failure.dart';
+import 'package:pokemon_app/app/domain/models/paginated_response/paginated_response.dart';
 import 'package:pokemon_app/app/domain/models/pokemon/pokemon.dart';
 import 'package:pokemon_app/app/domain/repositories/pokemon_repository.dart';
 
@@ -24,5 +25,20 @@ class PokemonRepositoryImpl implements PokemonRepository {
     int count = 1,
   }) async {
     return _pokemonApi.getRandomPokemons(count);
+  }
+
+  @override
+  Future<Either<HttpRequestFailure, Pokemon>> getUndetailedPokemon(
+    String url,
+  ) async {
+    return _pokemonApi.getUndetailedPokemon(url);
+  }
+
+  @override
+  Future<Either<HttpRequestFailure, PaginatedResponse>> getPaginatedPokemons(
+    int offset,
+    int limit,
+  ) async {
+    return _pokemonApi.getPaginatedPokemons(offset, limit);
   }
 }
