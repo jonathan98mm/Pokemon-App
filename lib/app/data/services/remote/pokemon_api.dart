@@ -263,6 +263,111 @@ class PokemonApi {
     }
   }
 
+  Future<Either<HttpRequestFailure, Ability>> getAbility(String url) async {
+    final int id = url.getIdFromUrl();
+    final String? abilityJson = _cache.getAbility(id);
+
+    if (abilityJson != null) {
+      return Future.value(
+        Either.right(Ability.fromJson(jsonDecode(abilityJson))),
+      );
+    }
+
+    final result = await _http.request(
+      useBaseUrl: false,
+      url,
+      onSuccess: (json) {
+        _cache.saveAbility(id, jsonEncode(json));
+
+        return Ability.fromJson(json);
+      },
+    );
+
+    return result.when(
+      left: handleHttpFailure,
+      right: (ability) => Either.right(ability),
+    );
+  }
+
+  Future<Either<HttpRequestFailure, Move>> getMove(String url) async {
+    final int id = url.getIdFromUrl();
+    final String? moveJson = _cache.getMove(id);
+
+    if (moveJson != null) {
+      return Future.value(Either.right(Move.fromJson(jsonDecode(moveJson))));
+    }
+
+    final result = await _http.request(
+      useBaseUrl: false,
+      url,
+      onSuccess: (json) {
+        _cache.saveMove(id, jsonEncode(json));
+
+        return Move.fromJson(json);
+      },
+    );
+
+    return result.when(
+      left: handleHttpFailure,
+      right: (move) => Either.right(move),
+    );
+  }
+
+  Future<Either<HttpRequestFailure, Stat>> getStat(
+    String url,
+    int? value,
+  ) async {
+    final int id = url.getIdFromUrl();
+    final String? statJson = _cache.getStat(id);
+
+    if (statJson != null) {
+      return Future.value(Either.right(Stat.fromJson(jsonDecode(statJson))));
+    }
+
+    final result = await _http.request(
+      useBaseUrl: false,
+      url,
+      onSuccess: (json) {
+        _cache.saveStat(id, jsonEncode(json));
+
+        Stat stat = Stat.fromJson(json);
+
+        return stat.copyWith(value: value ?? 0);
+      },
+    );
+
+    return result.when(
+      left: handleHttpFailure,
+      right: (stat) => Either.right(stat),
+    );
+  }
+
+  Future<Either<HttpRequestFailure, PokemonType>> getType(String url) async {
+    final int id = url.getIdFromUrl();
+    final String? typeJson = _cache.getType(id);
+
+    if (typeJson != null) {
+      return Future.value(
+        Either.right(PokemonType.fromJson(jsonDecode(typeJson))),
+      );
+    }
+
+    final result = await _http.request(
+      useBaseUrl: false,
+      url,
+      onSuccess: (json) {
+        _cache.saveType(id, jsonEncode(json));
+
+        return PokemonType.fromJson(json);
+      },
+    );
+
+    return result.when(
+      left: handleHttpFailure,
+      right: (type) => Either.right(type),
+    );
+  }
+
   Future<Either<HttpRequestFailure, PaginatedResponse>> getPaginatedPokemons(
     int offset,
     int limit,
@@ -315,31 +420,15 @@ class PokemonApi {
 
     print("Numero de Habilidades Iniciales: ${rawAbilities.length}");
 
-    for (Json item in rawAbilities) {
-      final String path = item["ability"]["url"];
-      final int id = path.getIdFromUrl();
-      final String? abilityJson = _cache.getAbility(id);
+    final List<Future<Either<HttpRequestFailure, Ability>>> detailsFutures =
+        rawAbilities.map((json) => getAbility(json["ability"]["url"])).toList();
 
-      if (abilityJson != null) {
-        abilities.add(Ability.fromJson(jsonDecode(abilityJson)));
+    final List<Either<HttpRequestFailure, Ability>> responseList =
+        await Future.wait(detailsFutures);
 
-        continue;
-      }
-
-      final result = await _http.request(
-        useBaseUrl: false,
-        path,
-        onSuccess: (json) {
-          _cache.saveAbility(id, jsonEncode(json));
-
-          return Ability.fromJson(json);
-        },
-      );
-
-      result.when(
-        left: (failure) {
-          print("Fallo en Habilidades: ${failure.exception}");
-        },
+    for (Either<HttpRequestFailure, Ability> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
         right: (ability) {
           abilities.add(ability);
         },
@@ -358,30 +447,16 @@ class PokemonApi {
 
     print("Número de Movimientos Iniciales: ${rawMoves.length}");
 
-    for (Json item in rawMoves) {
-      final String path = item["move"]["url"];
-      final int id = path.getIdFromUrl();
-      final String? moveJson = _cache.getMove(id);
+    final List<Future<Either<HttpRequestFailure, Move>>> detailsFutures =
+        rawMoves.map((json) => getMove(json["move"]["url"])).toList();
 
-      if (moveJson != null) {
-        moves.add(Move.fromJson(jsonDecode(moveJson)));
+    final List<Either<HttpRequestFailure, Move>> responseList =
+        await Future.wait(detailsFutures);
 
-        continue;
-      }
-
-      final result = await _http.request(
-        useBaseUrl: false,
-        path,
-        onSuccess: (json) {
-          _cache.saveMove(id, jsonEncode(json));
-
-          return Move.fromJson(json);
-        },
-      );
-
-      result.when(
-        left: (failure) => print("Fallo en Movimientos: ${failure.exception}"),
-        right: (move) async {
+    for (Either<HttpRequestFailure, Move> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
+        right: (move) {
           moves.add(move);
         },
       );
@@ -399,33 +474,18 @@ class PokemonApi {
 
     print("Número de Estadísticas Iniciales: ${rawStats.length}");
 
-    for (Json item in rawStats) {
-      final String path = item["stat"]["url"];
-      final int id = path.getIdFromUrl();
-      final String? statJson = _cache.getStat(id);
+    final List<Future<Either<HttpRequestFailure, Stat>>> detailsFutures =
+        rawStats
+            .map((json) => getStat(json["stat"]["url"], json["base_stat"]))
+            .toList();
 
-      if (statJson != null) {
-        Stat stat = Stat.fromJson(jsonDecode(statJson));
-        stats.add(stat.copyWith(value: item["base_stat"]));
+    final List<Either<HttpRequestFailure, Stat>> responseList =
+        await Future.wait(detailsFutures);
 
-        continue;
-      }
-
-      final result = await _http.request(
-        useBaseUrl: false,
-        path,
-        onSuccess: (json) {
-          Stat stat = Stat.fromJson(json);
-
-          _cache.saveStat(id, jsonEncode(json));
-
-          return stat.copyWith(value: item["base_stat"]);
-        },
-      );
-
-      result.when(
-        left: (failure) => print("Fallo en Estadisticas: ${failure.exception}"),
-        right: (stat) async {
+    for (Either<HttpRequestFailure, Stat> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
+        right: (stat) {
           stats.add(stat);
         },
       );
@@ -443,30 +503,16 @@ class PokemonApi {
 
     print("Número de Tipos Iniciales: ${rawTypes.length}");
 
-    for (Json item in rawTypes) {
-      final String path = item["type"]["url"];
-      final int id = path.getIdFromUrl();
-      final String? typeJson = _cache.getType(id);
+    final List<Future<Either<HttpRequestFailure, PokemonType>>> detailsFutures =
+        rawTypes.map((json) => getType(json["type"]["url"])).toList();
 
-      if (typeJson != null) {
-        types.add(PokemonType.fromJson(jsonDecode(typeJson)));
+    final List<Either<HttpRequestFailure, PokemonType>> responseList =
+        await Future.wait(detailsFutures);
 
-        continue;
-      }
-
-      final result = await _http.request(
-        useBaseUrl: false,
-        path,
-        onSuccess: (json) {
-          _cache.saveType(id, jsonEncode(json));
-
-          return PokemonType.fromJson(json);
-        },
-      );
-
-      result.when(
-        left: (failure) => print("Fallo en Tipos: ${failure.exception}"),
-        right: (type) async {
+    for (Either<HttpRequestFailure, PokemonType> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
+        right: (type) {
           types.add(type);
         },
       );

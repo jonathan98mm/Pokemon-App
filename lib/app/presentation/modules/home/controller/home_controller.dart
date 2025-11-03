@@ -11,9 +11,10 @@ class HomeController extends StateNotifier<HomeState> {
   final PokemonRepository pokemonRepository;
   final TextEditingController textController = TextEditingController();
   static const int _limit = 20;
+  bool _isLoadingPage = false;
 
   Future<void> init() async {
-    Future.wait([loadRandomPokemons(), loadInitialPokemons()]);
+    await Future.wait([loadRandomPokemons(), loadInitialPokemons()]);
   }
 
   Future<void> loadRandomPokemons() async {
@@ -47,10 +48,13 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   Future<void> loadNextPage() async {
-    if (state.paginatedPokemons is PokemonUiStateLoading ||
+    if (_isLoadingPage ||
+        state.paginatedPokemons is PokemonUiStateLoading ||
         !state.hasNextPage) {
       return;
     }
+
+    _isLoadingPage = true;
 
     final result = await pokemonRepository.getPaginatedPokemons(
       state.offset,
@@ -58,12 +62,18 @@ class HomeController extends StateNotifier<HomeState> {
     );
 
     state = result.when(
-      left: (_) => state,
+      left: (_) {
+        _isLoadingPage = false;
+
+        return state;
+      },
       right: (response) {
         final List<Pokemon> currentList = state.paginatedPokemons.maybeWhen(
           loaded: (pokemons) => pokemons,
           orElse: () => [],
         );
+
+        _isLoadingPage = false;
 
         return state.copyWith(
           paginatedPokemons: PokemonUiState.loaded([

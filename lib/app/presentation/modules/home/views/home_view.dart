@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/home_controller.dart';
 import 'package:pokemon_app/app/presentation/modules/home/controller/state/home_state.dart';
+import 'package:pokemon_app/app/presentation/modules/home/views/widgets/paginated_pokemon.dart';
 import 'package:pokemon_app/app/presentation/modules/home/views/widgets/pokemon_search_bar.dart';
 import 'package:pokemon_app/app/presentation/modules/home/views/widgets/pokemon_list.dart';
 import 'package:pokemon_app/generated/translations.g.dart';
@@ -64,7 +65,16 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       SizedBox(height: 10),
                       PokemonList(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
+                      Text(
+                        "Pokemones",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(child: PaginatedPokemon()),
                     ],
                   ),
                 ),

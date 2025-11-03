@@ -13,7 +13,6 @@ class PokemonList extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController controller = context.watch();
     final PokemonUiState randomState = controller.state.randomPokemons;
-    final PokemonUiState paginatedState = controller.state.paginatedPokemons;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
