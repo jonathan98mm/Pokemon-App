@@ -1,6 +1,8 @@
 {
   "home": {
-    "randomPokemon": "Pokemones del momento"
+    "randomPokemon": "Pokemones del momento",
+    "allPokemon": "Pokemones",
+    "search": "Buscar..."
   },
   "loader": "Cargando...",
   "pokemon": {
@@ -9,7 +11,9 @@
     "weight": "Peso: ",
     "abilities": "Habilidades",
     "movements": "Movimientos",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "accuracy": "Precisión: ",
+    "power": "Poder: "
   },
   "errors": {
     "error": "Ocurrió un error",

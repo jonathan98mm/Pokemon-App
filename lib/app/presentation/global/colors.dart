@@ -7,6 +7,7 @@ class AppColors {
   static const secondary = Color(0xFFf7b801);
   static const dark = Color(0xFF0a0908);
   static const darkLight = Color(0xFF22333b);
+  static const light = Color(0xFFeFF7F6);
   static const Map<int, Color> types = {
     1: Color(0xFFA4ACAF),
     2: Color(0xFFD56723),

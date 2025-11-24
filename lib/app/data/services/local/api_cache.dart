@@ -15,8 +15,8 @@ class ApiCache {
     return _box.put("move_$id", json);
   }
 
-  Future<void> saveStat(int id, String json) {
-    return _box.put("stat_$id", json);
+  Future<void> saveStat(int pokemonId, int id, String json) {
+    return _box.put("${pokemonId}_stat_$id", json);
   }
 
   Future<void> saveType(int id, String json) {
@@ -35,8 +35,8 @@ class ApiCache {
     return _box.get("move_$id");
   }
 
-  String? getStat(int id) {
-    return _box.get("stat_$id");
+  String? getStat(int pokemonId, int id) {
+    return _box.get("${pokemonId}_stat_$id");
   }
 
   String? getType(int id) {

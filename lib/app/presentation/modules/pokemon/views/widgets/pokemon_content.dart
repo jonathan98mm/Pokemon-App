@@ -168,6 +168,7 @@ class PokemonContent extends StatelessWidget {
         ),
         SliverToBoxAdapter(child: const SizedBox(height: 10)),
         MovementsList(movements: pokemon.movements),
+        SliverToBoxAdapter(child: const SizedBox(height: 20)),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pokemon_app/app/domain/models/pokemon/pokemon.dart';
+import 'package:pokemon_app/app/presentation/global/colors.dart';
 import 'package:pokemon_app/app/presentation/global/extensions/string_extension.dart';
 import 'package:pokemon_app/app/presentation/routes/routes.dart';
 
@@ -27,7 +28,7 @@ class PokemonTile extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadiusGeometry.circular(10),
         child: Container(
-          color: const Color.fromARGB(255, 196, 196, 196),
+          color: AppColors.light,
           width: width,
           child: Stack(
             children: [

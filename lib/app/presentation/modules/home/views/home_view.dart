@@ -36,13 +36,7 @@ class _HomeViewState extends State<HomeView> {
               Text("Pokémon App", style: TextStyle(fontSize: 15)),
             ],
           ),
-          actions: [
-            LayoutBuilder(
-              builder: (context, constraints) => PokemonSearchBar(
-                controller: context.read<HomeController>().textController,
-              ),
-            ),
-          ],
+          actions: [PokemonSearchBar()],
           actionsPadding: EdgeInsets.only(right: 10),
         ),
         body: SafeArea(
@@ -67,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                       PokemonList(),
                       SizedBox(height: 10),
                       Text(
-                        "Pokemones",
+                        texts.home.allPokemon,
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

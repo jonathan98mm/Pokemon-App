@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/app/domain/models/move/move.dart';
+import 'package:pokemon_app/generated/translations.g.dart';
 
 class MovementsList extends StatelessWidget {
   const MovementsList({super.key, required this.movements});
@@ -44,7 +45,7 @@ class MovementsList extends StatelessWidget {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: "Precisión: ",
+                      text: texts.pokemon.accuracy,
                       children: [
                         TextSpan(
                           text: movements[index].accuracy.toString(),
@@ -56,7 +57,7 @@ class MovementsList extends StatelessWidget {
                   ),
                   Text.rich(
                     TextSpan(
-                      text: "Poder: ",
+                      text: texts.pokemon.power,
                       children: [
                         TextSpan(
                           text: movements[index].power.toString(),

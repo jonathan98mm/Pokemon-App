@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:faker/faker.dart';
 import 'package:pokemon_app/app/data/http/http.dart';
+import 'package:pokemon_app/app/data/http/request_failure.dart';
 import 'package:pokemon_app/app/data/services/local/api_cache.dart';
 import 'package:pokemon_app/app/data/services/utils/handle_request_failure.dart';
 import 'package:pokemon_app/app/domain/either/either.dart';
@@ -38,6 +39,7 @@ class PokemonApi {
       );
       final statsResult = await getStats(
         List<Map<String, dynamic>>.from(json["stats"]),
+        id,
       );
       final typesResult = await getTypes(
         List<Map<String, dynamic>>.from(json["types"]),
@@ -88,6 +90,7 @@ class PokemonApi {
           );
           final statsResult = await getStats(
             List<Map<String, dynamic>>.from(json["stats"]),
+            id,
           );
           final typesResult = await getTypes(
             List<Map<String, dynamic>>.from(json["types"]),
@@ -152,6 +155,7 @@ class PokemonApi {
         );
         final statsResult = await getStats(
           List<Map<String, dynamic>>.from(json["stats"]),
+          json["id"],
         );
         final typesResult = await getTypes(
           List<Map<String, dynamic>>.from(json["types"]),
@@ -201,28 +205,18 @@ class PokemonApi {
     List<Pokemon> pokemons = [];
     List<int> ids = faker.randomGenerator.numbers(1025, count);
 
-    for (int i = 0; i < count; i++) {
-      final String? pokemonJson = _cache.getPokemon(ids[i]);
+    final List<Future<Either<HttpRequestFailure, Pokemon>>> detailsFutures = ids
+        .map((id) => getUndetailedPokemon("", id))
+        .toList();
 
-      if (pokemonJson != null) {
-        pokemons.add(Pokemon.fromJson(jsonDecode(pokemonJson)));
+    final List<Either<HttpRequestFailure, Pokemon>> responseList =
+        await Future.wait(detailsFutures);
 
-        continue;
-      }
+    print(responseList);
 
-      final result = await _http.request(
-        "pokemon/${ids[i]}",
-        onSuccess: (json) {
-          _cache.savePokemon(ids[i], jsonEncode(json));
-
-          Pokemon pokemon = Pokemon.fromJson(json);
-
-          return pokemon;
-        },
-      );
-
-      result.when(
-        left: handleHttpFailure,
+    for (Either<HttpRequestFailure, Pokemon> response in responseList) {
+      response.when(
+        left: (failure) => Either.left(failure),
         right: (pokemon) {
           pokemons.add(pokemon);
         },
@@ -233,28 +227,43 @@ class PokemonApi {
   }
 
   Future<Either<HttpRequestFailure, Pokemon>> getUndetailedPokemon(
-    String url,
-  ) async {
-    final int id = url.getIdFromUrl();
+    String url, [
+    int? pokemonId,
+  ]) async {
+    final int id = pokemonId ?? url.getIdFromUrl();
     final String? pokemonJson = _cache.getPokemon(id);
     final Pokemon pokemon;
+    Either<RequestFailure, Pokemon> result;
 
     if (pokemonJson != null) {
       pokemon = Pokemon.fromJson(jsonDecode(pokemonJson));
 
       return Future.value(Either.right(pokemon));
     } else {
-      final result = await _http.request(
-        url,
-        useBaseUrl: false,
-        onSuccess: (json) {
-          _cache.savePokemon(id, jsonEncode(json));
+      if (pokemonId != null) {
+        result = await _http.request(
+          "pokemon/$id",
+          onSuccess: (json) {
+            _cache.savePokemon(id, jsonEncode(json));
 
-          Pokemon pokemon = Pokemon.fromJson(json);
+            Pokemon pokemon = Pokemon.fromJson(json);
 
-          return pokemon;
-        },
-      );
+            return pokemon;
+          },
+        );
+      } else {
+        result = await _http.request(
+          url,
+          useBaseUrl: false,
+          onSuccess: (json) {
+            _cache.savePokemon(id, jsonEncode(json));
+
+            Pokemon pokemon = Pokemon.fromJson(json);
+
+            return pokemon;
+          },
+        );
+      }
 
       return result.when(
         left: handleHttpFailure,
@@ -316,23 +325,30 @@ class PokemonApi {
   Future<Either<HttpRequestFailure, Stat>> getStat(
     String url,
     int? value,
+    int pokemonId,
   ) async {
     final int id = url.getIdFromUrl();
-    final String? statJson = _cache.getStat(id);
+    final String? statJson = _cache.getStat(pokemonId, id);
 
     if (statJson != null) {
-      return Future.value(Either.right(Stat.fromJson(jsonDecode(statJson))));
+      Stat stat = Stat.fromJson(jsonDecode(statJson));
+      stat = stat.copyWith(value: value ?? 0);
+
+      return Future.value(Either.right(stat));
     }
 
     final result = await _http.request(
       useBaseUrl: false,
       url,
       onSuccess: (json) {
-        _cache.saveStat(id, jsonEncode(json));
+        _cache.saveStat(pokemonId, id, jsonEncode(json));
 
         Stat stat = Stat.fromJson(json);
+        stat = stat.copyWith(value: value ?? 0);
 
-        return stat.copyWith(value: value ?? 0);
+        print(stat);
+
+        return stat;
       },
     );
 
@@ -469,6 +485,7 @@ class PokemonApi {
 
   Future<Either<HttpRequestFailure, List<Stat>>> getStats(
     List<Json> rawStats,
+    int pokemonId,
   ) async {
     List<Stat> stats = [];
 
@@ -476,7 +493,10 @@ class PokemonApi {
 
     final List<Future<Either<HttpRequestFailure, Stat>>> detailsFutures =
         rawStats
-            .map((json) => getStat(json["stat"]["url"], json["base_stat"]))
+            .map(
+              (json) =>
+                  getStat(json["stat"]["url"], json["base_stat"], pokemonId),
+            )
             .toList();
 
     final List<Either<HttpRequestFailure, Stat>> responseList =
