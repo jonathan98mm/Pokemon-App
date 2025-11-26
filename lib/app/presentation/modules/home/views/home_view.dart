@@ -42,7 +42,7 @@ class _HomeViewState extends State<HomeView> {
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) => RefreshIndicator(
-              onRefresh: context.read<HomeController>().init,
+              onRefresh: context.read<HomeController>().loadRandomPokemons,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(

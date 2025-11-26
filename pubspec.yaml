@@ -1,7 +1,7 @@
 name: pokemon_app
-description: "Application for viewing relevant information about the Pokémon saga."
+description: "Application for viewing relevant information about Pokemons"
 publish_to: 'none'
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: ^3.9.2
@@ -30,7 +30,6 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_soloud: ^3.4.1
   skeletonizer: ^2.1.0+1
-  anim_search_bar: ^2.0.3
 
 dev_dependencies:
   flutter_test:
