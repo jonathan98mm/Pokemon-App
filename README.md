@@ -43,7 +43,7 @@ Sigue estos pasos para ejecutar el proyecto en tu máquina local.
 
 ```bash
 git clone https://github.com/jonathan98mm/Pokemon-App.git
-cd pokemon_app
+cd Pokemon-App
 flutter pub get
 ```
 
